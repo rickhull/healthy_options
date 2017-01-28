@@ -41,9 +41,10 @@ FLAGS.each { |sym, hsh|
   INDEX[:short][hsh[:short]] = sym if hsh[:short]
 }
 
-def option_parse(opts, args)
+def option_parse(args, opts = {})
+  return [args, opts] if args.empty?
   res = check_flag(args.first)
-  return [opts, args] if res.first == :no_flag
+  return [args, opts] if res.first == :no_flag
 
   flag = res[1] || raise("flag expected")
   sym = INDEX[:long][flag] || INDEX[:short][flag]
@@ -68,7 +69,7 @@ def option_parse(opts, args)
   else
     raise "unknown result: #{res.first}"
   end
-  option_parse(opts, args)
+  option_parse(args, opts)
 end
 
 def parse_smashed(arg)
@@ -114,7 +115,7 @@ def check_flag(arg)
     # arg is not a flag
     # do a sanity check for caller's sake
     raise "arg should not be empty" if arg.nil? or arg.empty?
-    return :no_flag
+    return [:no_flag]
   end
   sym = INDEX.dig(flag_type, flag)
   return [:unknown_flag, flag] unless sym
