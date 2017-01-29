@@ -47,7 +47,9 @@ describe HealthyOptions do
 
         invalid.each do |invalid_args|
           it "must reject #{invalid_args}" do
-            proc { HealthyOptions.parse(invalid_args) }.must_raise RuntimeError
+            proc {
+              HealthyOptions.parse(invalid_args)
+            }.must_raise RuntimeError
           end
         end
       end
@@ -67,12 +69,15 @@ describe HealthyOptions do
         #   -bar    (could be `-b ar`, or `-b -ar`, or `-b -a -r`)
         #   --.bar
         #   ---bar
-        #   --
         invalid = [['--bar='],
                    ['-bar'],
                    ['--.bar'],
                    ['---bar'],
-                   ['--'],
+                  ]
+
+        # SPECIAL
+        #   --    not a recognized flag as such; not sure how to handle yet
+        special = [['--'],
                   ]
 
         valid.each do |valid_args|
@@ -88,7 +93,19 @@ describe HealthyOptions do
 
         invalid.each do |invalid_args|
           it "must reject #{invalid_args}" do
-            proc { HealthyOptions.parse(invalid_args) }.must_raise RuntimeError
+            proc {
+              HealthyOptions.parse(invalid_args)
+            }.must_raise RuntimeError
+          end
+        end
+
+        special.each do |special_args|
+          it "must pass on #{special_args}" do
+            args, opts = HealthyOptions.parse(special_args)
+            args.must_be_instance_of(Array)
+            args.must_equal(special_args)
+            opts.must_be_instance_of(Hash)
+            opts.must_be_empty
           end
         end
       end

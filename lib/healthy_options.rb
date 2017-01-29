@@ -11,6 +11,7 @@ module HealthyOptions
       \w+    # one last word (possibly first as well)
     )        # end flag group
     }x,      # end :long regex
+
     short: %r{
     \A       # starts with
     -        # single dash
@@ -18,6 +19,9 @@ module HealthyOptions
       \w     # word char
     )        # end flag group
     }x,      # end :short regex
+  }
+  SPECIALS = {
+    separator: '--',
   }
 
   # more than temporary, for now
@@ -52,6 +56,7 @@ module HealthyOptions
     return [args, opts] unless self.flag?(args.first)
 
     res, flag, value = self.check_flag(args.first)
+    return [args, opts] if res == :separator
     raise("unrecognized flag: #{args.first}") if res == :no_flag
     raise("flag expected for #{res}") unless flag
 
@@ -107,6 +112,7 @@ module HealthyOptions
   end
 
   def self.check_flag(arg)
+    SPECIALS.each { |sym, val| return [sym, val] if arg == val }
     flag = nil
     flag_type = nil
     RGX.each { |ft, rgx|
