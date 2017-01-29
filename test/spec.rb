@@ -3,6 +3,10 @@ require 'healthy_options'
 
 describe HealthyOptions do
   before do
+
+    # NOTE: these are just for show.  the flag definitions currently live
+    #       inside the lib at HealthyOptions::FLAGS
+    #       I am about to factor this out...
     @flags = {
       foo: {
         long: 'foo',
