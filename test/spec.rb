@@ -34,7 +34,7 @@ describe HealthyOptions do
         # VALID
         #   --foo bar
         #   --foo=bar
-        valid = [['--foo', 'bar'],
+        normal = [['--foo', 'bar'],
                  ['--foo=bar']]
         # INVALID
         #   --foo= bar (consider new feature)
@@ -45,7 +45,7 @@ describe HealthyOptions do
                    ['--foo'],
                   ]
 
-        valid.each do |valid_args|
+        normal.each do |valid_args|
           it "must parse #{valid_args}" do
             args, opts = @options.parse(valid_args)
             args.must_be_instance_of(Array)
@@ -148,7 +148,6 @@ describe HealthyOptions do
           smashed_flag_value:
             [['-af5']],
         }
-
         [:normal, :smashed_value].each do |arg_type|
           arguments.fetch(arg_type).each do |valid_args|
             it "must parse #{arg_type} args: #{valid_args}" do
