@@ -12,17 +12,18 @@ most prevalent styles with a single option spec and parser?
 
 First, some terminology, as used below:
 
-* **arg** - _A single term from a command line invocation as would be parsed
-            and available in C's ARGV struct (i.e. whitespace delimited)_
-* **option** - _an **arg** or combination of args that "belongs to" (and
-               presumably controls) the calling program;
+* **arg** - _A single term from a command line invocation as would
+            be parsed and available in C's `ARGV` struct;
+            i.e. whitespace delimited_
+* **option** - _an **arg** or combination of args that "belongs to"
+               (and presumably controls) the calling program;
                options are denoted by leading **flags**_
 * **flag** - _an **arg** or part of an arg that begins an **option**;
-             flags typically start with a dash though this can be omitted in
-             certain cases;
+             flags typically start with a dash though this can be
+             omitted in certain cases;
              a flag may be the entirety of an option_
-* **value** - _when an **option** is not a simple **flag**, the option may
-              have a value;
+* **value** - _when an **option** is not a simple **flag**, the
+              option may have a value;
               this is always preceded by the flag;
               an option that takes a value may span two args_
 
@@ -50,7 +51,10 @@ First, some terminology, as used below:
 
 1. is this `flag=l value=f` or `flag=lf`?
 2. check `flag=lf` first, noting whether we have a value for it
-3. we don't have a value for `flag=lf`: no equals, and the next arg is a flag
+3. we don't have a value for `flag=lf`: no equals, and the next arg
+   is a flag
+4. we need to look up the options definition to see if `flag=lf` or
+   `flag=l value=f` makes more sense
 
 let's consider the following flags:
 
