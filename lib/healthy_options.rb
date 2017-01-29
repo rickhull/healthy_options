@@ -64,9 +64,12 @@ class HealthyOptions
   end
 
   def check_flag(arg)
+    # note, #parse has already confirmed self.class.flag?(arg)
     SPECIALS.each { |sym, val| return [sym, val] if arg == val }
     flag = nil
     flag_type = nil
+
+    # check the purported flag against the regex
     RGX.each { |ft, rgx|
       if (m = rgx.match(arg))
         flag = m['flag']
@@ -74,19 +77,15 @@ class HealthyOptions
         break
       end
     }
-    unless flag_type
-      # arg is not a flag
-      # do a sanity check for caller's sake
-      raise "arg should not be empty" if arg.nil? or arg.empty?
-      return [:no_flag]
-    end
+    raise "strange flag: #{arg}" unless flag_type # arg doesn't match regex
+
+    # look up the flag in the index
     sym = @index.dig(flag_type, flag)
     return [:unknown_flag, flag] unless sym
     spec = @flags.fetch(sym)
 
     #
-    # VALIDATION
-    # ---
+    # perform validation based on long/short and value/no-value
     # everything below here returns or raises
     #
 
@@ -141,14 +140,15 @@ class HealthyOptions
     end
   end
 
+  # this is a recursive method
+  # opts tends to grow while args shrinks
   def parse(args, opts = {})
     return [args, opts] if args.empty?
     return [args, opts] unless self.class.flag?(args.first)
 
     res, flag, value = self.check_flag(args.first)
     return [args, opts] if res == :separator
-    raise("unrecognized flag: #{args.first}") if res == :no_flag
-    raise("flag expected for #{res}") unless flag
+    raise("flag expected for #{res}") unless flag # sanity check
 
     # TODO: we should know by now whether it's a long or short flag
     sym = @index[:long][flag] || @index[:short][flag]
