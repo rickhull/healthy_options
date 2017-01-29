@@ -14,6 +14,16 @@ describe HealthyOptions do
         short: 'b',
         value: false,
       },
+      barbaz1: {
+        long: 'bar-baz',
+        short: 'a',
+        value: false,
+      },
+      barbaz2: {
+        long: 'bar_baz',
+        short: 'c',
+        value: false,
+      },
     }
     @options = HealthyOptions.new(@flags)
   end
@@ -61,8 +71,8 @@ describe HealthyOptions do
         #   --bar-baz
         #   --bar_baz
         valid = [['--bar'],
-               #  ['--bar-baz'],  these are unrecognized
-               #  ['--bar_baz'],
+                 ['--bar-baz'],
+                 ['--bar_baz'],
                 ]
 
         # INVALID
@@ -88,7 +98,9 @@ describe HealthyOptions do
             args.must_be_empty
             opts.must_be_instance_of(Hash)
             opts.wont_be_empty
-            opts[:bar].must_equal(true)
+            opts.keys.length == 1
+            opts.values.length == 1
+            opts.values.first == true
           end
         end
 
