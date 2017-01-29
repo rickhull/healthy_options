@@ -25,6 +25,7 @@ class HealthyOptions
     separator: '--',
   }
 
+  # create reverse lookups on :long and :short values
   def self.index(option_specs)
     idx = { long: {}, short: {}, }
     option_specs.each { |flag, cfg|
@@ -39,6 +40,15 @@ class HealthyOptions
   def self.flag?(arg)
     arg[0] == '-'
   end
+
+  # e.g. option_specs
+  # {
+  #   foo: {
+  #     long:  'foo',
+  #     short: 'f',
+  #     value: true
+  #   },
+  # }
 
   def initialize(option_specs = {})
     self.option_specs = option_specs
