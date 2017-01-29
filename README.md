@@ -69,6 +69,8 @@ let's consider the following flags:
 This can't be `--net-read` because we don't have a value.
 It must be `name=r`.
 
+What if `--net-read` doesn't take a value?
+
 ```
 --name,      -n, requires a value
 --enable,    -e, no value accepted
@@ -77,15 +79,18 @@ It must be `name=r`.
 
 `-nr -e`
 
-This could be `--net-read` or `name=r`, but we'll take `--net-read` because
-it was specific.
+This could be `--net-read` or `name=r`, but we'll take `--net-read`
+because it was specific -- it didn't depend on a user-supplied value
+to match the spec.
 
 # Recommendation
 
-1. don't support `-nr` (one dash for short options, two for long)
+1. don't support `-nr` (instead: one dash for short -- single char
+   -- options, two dashes for long options)
 2. don't support smashing for long options, ever
 3. support smashing for short options, both flags and any final value
-4. always handle an `=` immediately after a recognized flag (which takes a value) as a value assignment
+4. always handle an `=` immediately after a recognized flag
+   (which takes a value) as a value assignment
 
 
 ## 2 primary distinctions
