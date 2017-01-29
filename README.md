@@ -2,8 +2,12 @@
 
 *subject to revision; just capturing some notes for now; pay no heed*
 
-Thinking about parsing command line arguments...  What are the most prevalent
+## Background
+
+Thinking about parsing command line options...  What are the most prevalent
 styles out there?
+
+### Terminology
 
 First, some terminology, as used below:
 
@@ -21,7 +25,7 @@ First, some terminology, as used below:
               this is always preceded by the flag;
               an option that takes a value may span two args_
 
-# Prevalent arg styles
+## Prevalent command line options styles
 
 * flags always start with dash
 * could be double-dash long-form: `--long-flag`
@@ -29,19 +33,17 @@ First, some terminology, as used below:
 * could be single-dash long-form: `-lf`
 * and ?
 
-## Values
+### Values
 
 * space, e.g. --long-flag value
 * equals, e.g. --long-flag=value
 * smash, e.g. -lvalue
 
-## Smash flags
+### Smash flags
 
-* e.g. ps aux
+* e.g. `ps aux` or `ps -ef`
 
-# Notes
-
-## cases
+## Cases
 
 `-lf -lr`
 
@@ -73,7 +75,7 @@ It must be `name=r`.
 This could be `--net-read` or `name=r`, but we'll take `--net-read` because
 it was specific.
 
-Recommendation:
+# Recommendation
 
 1. don't support `-nr` (one dash for short options, two for long)
 2. don't support smashing for long options, ever
