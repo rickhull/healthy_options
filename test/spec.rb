@@ -136,32 +136,45 @@ describe HealthyOptions do
         #   -af=5
         # SMASHED FLAG & VALUE
         #   -af5
-        valid = [['-f', '5'],
-                 ['-f=5'],
-                ]
-        smashed_value = [['-f5']]
-        smashed_flag = [['-af', '5'],
-                        ['-af=5'],
-                       ]
-        smashed_flag_value = [['-af5']]
+        arguments = {
+          normal:
+            [['-f', '5'],
+             ['-f=5']],
+          smashed_value:
+            [['-f5']],
+          smashed_flag:
+            [['-af', '5'],
+             ['-af=5']],
+          smashed_flag_value:
+            [['-af5']],
+        }
 
-        valid.each do |valid_args|
-          it "must parse #{valid_args}" do
-            args, opts = @options.parse(valid_args)
-            args.must_be_instance_of(Array)
-            args.must_be_empty
-            opts.must_be_instance_of(Hash)
-            opts.wont_be_empty
-            opts[:foo].must_equal("5")
+        [:normal, :smashed_value].each do |arg_type|
+          arguments.fetch(arg_type).each do |valid_args|
+            it "must parse #{arg_type} args: #{valid_args}" do
+              args, opts = @options.parse(valid_args)
+              args.must_be_instance_of(Array)
+              args.must_be_empty
+              opts.must_be_instance_of(Hash)
+              opts.wont_be_empty
+              opts[:foo].must_equal("5")
+            end
           end
         end
-      end
 
-      describe "smashed value options" do
-        # SMASHED VALUE (valid)
-        #   -p5
-        # SMASHED FLAG & VALUE
-        #   -op5
+        [:smashed_flag, :smashed_flag_value].each do |arg_type|
+          arguments.fetch(arg_type).each do |valid_args|
+            it "must parse #{arg_type} args: #{valid_args}" do
+              args, opts = @options.parse(valid_args)
+              args.must_be_instance_of(Array)
+              args.must_be_empty
+              opts.must_be_instance_of(Hash)
+              opts.wont_be_empty
+              opts[:foo].must_equal("5")
+              opts[:barbaz1].must_equal(true)
+            end
+          end
+        end
       end
 
       describe "flag options" do

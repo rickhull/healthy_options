@@ -140,6 +140,13 @@ class HealthyOptions
     end
   end
 
+  def self.pop_value(args)
+    val = args.first
+    raise "args is empty" unless val
+    raise "#{val} is not a value" if self.flag?(val)
+    args.shift
+  end
+
   # this is a recursive method
   # opts tends to grow while args shrinks
   def parse(args, opts = {})
@@ -147,6 +154,8 @@ class HealthyOptions
     return [args, opts] unless self.class.flag?(args.first)
 
     res, flag, value = self.check_flag(args.first)
+    # puts "\n\nDEBUG: #{res} #{flag} #{value}"
+
     return [args, opts] if res == :separator
     raise("flag expected for #{res}") unless flag # sanity check
 
@@ -160,23 +169,27 @@ class HealthyOptions
       raise("value expected") unless value
       opts[sym] = value
     when :flag_need_val
-      value = args.shift
-      raise "flag #{flag} needs a value; none provided" unless value
-      raise "flag #{flag} needs a value; got #{value}" if self.class.flag?(value)
-      opts[sym] = value
+      opts[sym] = self.class.pop_value(args)
     when :flag_no_val
       opts[sym] = true
     when :flag_no_val_more
       opts[sym] = true
       raise("more exected for #{flag} parsed as #{res}") unless value
       # look for smashed flags
-      opts = opts.merge(self.parse_smashed(value))
+      self.parse_smashed(value).each { |smflag, smval|
+        # the last smashed flag may need a val from args
+        opts[smflag] = smval || self.class.pop_value(args)
+      }
     else
       raise "unknown result: #{res}"
     end
     self.parse(args, opts)
   end
 
+
+
+  # original args: -af=5
+  #                -af 5
   def parse_smashed(arg)
     opts = {}
     # preceding dash and flag have been removed
@@ -189,8 +202,13 @@ class HealthyOptions
       spec = @flags.fetch(sym)
       # TODO: error handling (punctuation, -p5 -5p, etc)
       if spec[:value]
-        opts[sym] = val
-        break
+        val.slice!(0, 1) if val[0] == '='
+        if val.empty?
+          opts[sym] = nil # indicate to parse we need another arg; ugh, hack!
+        else
+          opts[sym] = val
+        end
+        break # a value always ends smashing
       else
         opts[sym] = true
       end
