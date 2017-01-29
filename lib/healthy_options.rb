@@ -25,20 +25,6 @@ class HealthyOptions
     separator: '--',
   }
 
-  # sample structure, just temporary for prototyping
-  FLAGS = {
-    foo: {
-      long: 'foo',
-      short: 'f',
-      value: true,
-    },
-    bar: {
-      long: 'bar',
-      short: 'b',
-      value: false,
-    },
-  }
-
   def self.index(flags)
     idx = { long: {}, short: {}, }
     flags.each { |flag, cfg|
