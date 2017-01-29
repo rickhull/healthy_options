@@ -132,6 +132,9 @@ class HealthyOptions
         if val[0] == '='
           raise("#{flag} does not take a value: #{arg}")
         else
+          # we have a short flag that doesn't take a value
+          # but there is more to parse in this arg:
+          # this is a case of smashed flags like -abc
           return [:flag_no_val_more, flag, val]
         end
       else
@@ -174,7 +177,7 @@ class HealthyOptions
       opts[sym] = true
     when :flag_no_val_more
       opts[sym] = true
-      raise("more exected for #{flag} parsed as #{res}") unless value
+      raise("more expected for #{flag} parsed as #{res}") unless value
       # look for smashed flags
       self.parse_smashed(value).each { |smflag, smval|
         # the last smashed flag may need a val from args
@@ -186,10 +189,10 @@ class HealthyOptions
     self.parse(args, opts)
   end
 
-
-
-  # original args: -af=5
-  #                -af 5
+  # if the arg is like -abcd
+  # parse() will pick off -a, and we're left with bcd
+  # pass bcd to parse_smashed()
+  #
   def parse_smashed(arg)
     opts = {}
     # preceding dash and flag have been removed
@@ -199,16 +202,16 @@ class HealthyOptions
       char = val.slice!(0, 1)
       sym = @index[:short][char]
       raise "unknown flag smashed in: #{char} in #{arg}" unless sym
+
       spec = @flags.fetch(sym)
-      # TODO: error handling (punctuation, -p5 -5p, etc)
       if spec[:value]
         val.slice!(0, 1) if val[0] == '='
         if val.empty?
-          opts[sym] = nil # indicate to parse we need another arg; ugh, hack!
+          opts[sym] = nil # tell parse() we need another arg; ugh, hack!
         else
           opts[sym] = val
         end
-        break # a value always ends smashing
+        break # a value always ends the smash
       else
         opts[sym] = true
       end
