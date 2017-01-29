@@ -98,9 +98,9 @@ describe HealthyOptions do
             args.must_be_empty
             opts.must_be_instance_of(Hash)
             opts.wont_be_empty
-            opts.keys.length == 1
-            opts.values.length == 1
-            opts.values.first == true
+            opts.keys.length.must_equal 1
+            opts.values.length.must_equal 1
+            opts.values.first.must_equal true
           end
         end
 
