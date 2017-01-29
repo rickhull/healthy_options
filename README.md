@@ -99,10 +99,7 @@ if it's a long option, it's easy:
  yes.2 if the next arg is not a flag, done.
  yes.3 otherwise fail
  no.1 if we have equals, fail
- no.2 if the next arg is a flag, done
- no.3 if there are no more args, done
- no.4 if there are no more flags, done (leave non-flag args alone)
- no.5 otherwise we have an arg, fail
+ no.2 otherwise done
 ```
 
 if it's a short option, we have to consider smashing
@@ -120,6 +117,8 @@ if it's a short option, we have to consider smashing
  3.a if no value wanted, then parse next char as a short flag
  3.b if value wanted, read the rest of the word as a value, done
 ```
+
+Overall strategy, from the top:
 
 ```
 1. given a string of alphanum, punctuation, and whitespace
@@ -139,3 +138,5 @@ if it's a short option, we have to consider smashing
 So, split on whitespace.  That's handled for us with ARGV.
 
 Next, look for dashes in the first arg.
+
+... to be continued ...
