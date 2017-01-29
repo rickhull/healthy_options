@@ -2,66 +2,90 @@
 
 *subject to revision; just capturing some notes for now; pay no heed*
 
-# arg styles
+Thinking about parsing command line arguments...  What are the most prevalent
+styles out there?
+
+First, some terminology, as used below:
+
+* **arg** - *A single term from a command line invocation as would be parsed
+            and available in C's ARGV struct (i.e. whitespace delimited)*
+* **option** - *an **arg** or combination of args that "belongs to" the
+               calling program; **options** are denoted by **flags**
+* **flag** - *an **arg** or part of an arg that begins an **option**; flags
+             typically start with a dash though this can be omitted in
+             certain cases; a flag may be the entirety of an option
+* **value** - *when an **option** is not a simple **flag**, the option may
+              have a value; this is always preceded by the flag; when an
+              option takes a value, that option may span two args
+
+# Prevalent arg styles
 
 * flags always start with dash
-* could be double-dash long-form e.g. --long-flag
-* could be single-dash short-form e.g. -l
-* could be single-dash long-form e.g. -lf
+* could be double-dash long-form: `--long-flag`
+* could be single-dash short-form: `-l`
+* could be single-dash long-form: `-lf`
+* and ?
 
-# Values
+## Values
 
 * space, e.g. --long-flag value
 * equals, e.g. --long-flag=value
 * smash, e.g. -lvalue
 
-# Smash flags
+## Smash flags
 
 * e.g. ps aux
 
+# Notes
 
-cases:
+## cases
 
 `-lf -lr`
 
-1. is this flag=l value=f or flag=lf
-2. check flag=lf first, noting whether we have a value for it
-3. we don't have a value for flag=lf: no equals, and the next arg is a flag
-
+1. is this `flag=l`, `value=f` or `flag=lf`?
+2. check `flag=lf` first, noting whether we have a value for it
+3. we don't have a value for `flag=lf`: no equals, and the next arg is a flag
 
 let's consider the following flags:
 
+```
 --name,      -n, requires a value
 --enable,    -e, no value accepted
 --net-read, -nr, requires a value
+```
 
 `-nr -e`
 
-This can't be --net-read because we don't have a value.  It must be name=r.
+This can't be `--net-read` because we don't have a value.
+It must be `name=r`.
 
+```
 --name,      -n, requires a value
 --enable,    -e, no value accepted
 --net-read, -nr, no value accepted
+```
 
 `-nr -e`
 
-This could be --net-read or name=r, but we'll take --net-read because it was
-specific.
+This could be `--net-read` or `name=r`, but we'll take `--net-read` because
+it was specific.
 
 Recommendation:
 
-1. don't support -nr (one dash for short options, two for long)
+1. don't support `-nr` (one dash for short options, two for long)
 2. don't support smashing for long options, ever
 3. support smashing for short options, both flags and any final value
-4. always handle an = immediately after a recognized flag (which takes a value) as a value assignment
+4. always handle an `=` immediately after a recognized flag (which takes a value) as a value assignment
 
 
-2 primary distinctions:
+## 2 primary distinctions
 
 * short option or long option
 * takes a value or not
 
 if it's a long option, it's easy:
+
+```
 1. read 2 dashes
 2. read until [space] or [equals]
 3. match flag or fail
@@ -74,9 +98,11 @@ if it's a long option, it's easy:
  no.3 if there are no more args, done
  no.4 if there are no more flags, done (leave non-flag args alone)
  no.5 otherwise we have an arg, fail
-
+```
 
 if it's a short option, we have to consider smashing
+
+```
 1. read a single dash followed by alphanum
 2. confirm the flag and whether it takes a value
 3. if the next character is a space, look for value match
@@ -88,8 +114,9 @@ if it's a short option, we have to consider smashing
 4. if the next character is an alphanum, then we have either a smashed flag or a smashed value, depending on #2.
  3.a if no value wanted, then parse next char as a short flag
  3.b if value wanted, read the rest of the word as a value, done
+```
 
-
+```
 1. given a string of alphanum, punctuation, and whitespace
 2. split on whitespace into args consisting of alphanum and punctuation
 3. an arg is either an option-flag, an option-value,
@@ -102,7 +129,7 @@ if it's a short option, we have to consider smashing
 9. every arg after a NONOPT must be a NONOPT
 10. any NONOPT that looks like a flag is forbidden
 11. unless it's the special DOUBLEDASH
-
+```
 
 So, split on whitespace.  That's handled for us with ARGV.
 
