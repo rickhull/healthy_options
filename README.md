@@ -7,16 +7,16 @@ styles out there?
 
 First, some terminology, as used below:
 
-* **arg** - *A single term from a command line invocation as would be parsed
-            and available in C's ARGV struct (i.e. whitespace delimited)*
-* **option** - *an **arg** or combination of args that "belongs to" the
-               calling program; **options** are denoted by **flags**
-* **flag** - *an **arg** or part of an arg that begins an **option**; flags
+* **arg** - _A single term from a command line invocation as would be parsed
+            and available in C's ARGV struct (i.e. whitespace delimited)_
+* **option** - _an **arg** or combination of args that "belongs to" the
+               calling program; **options** are denoted by **flags**_
+* **flag** - _an **arg** or part of an arg that begins an **option**; flags
              typically start with a dash though this can be omitted in
-             certain cases; a flag may be the entirety of an option
-* **value** - *when an **option** is not a simple **flag**, the option may
+             certain cases; a flag may be the entirety of an option_
+* **value** - _when an **option** is not a simple **flag**, the option may
               have a value; this is always preceded by the flag; when an
-              option takes a value, that option may span two args
+              option takes a value, that option may span two args_
 
 # Prevalent arg styles
 
