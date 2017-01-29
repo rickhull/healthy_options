@@ -139,17 +139,7 @@ Overall strategy, from the top:
 3. an arg is either an option-flag, an option-value,
    a combination of these 2, or a non-option
 4. the combinations consist of short-option smashing or flag=value
-5. options come before non-options
-6. args flatten to FLAG VALUE NONOPT [[DOUBLEDASH] ANY]
-7. FLAG can be followed by FLAG or !FLAG
-8. VALUE must be preceded by FLAG (otherwise it's a NONOPT)
-9. every arg after a NONOPT must be a NONOPT
-10. any NONOPT that looks like a flag is forbidden
-11. unless it's the special DOUBLEDASH
+   forms
+5. an option can span 2 args when it takes a value without the
+   flag=value form
 ```
-
-So, split on whitespace.  That's handled for us with ARGV.
-
-Next, look for dashes in the first arg.
-
-... to be continued ...
