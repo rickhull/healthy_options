@@ -1,3 +1,12 @@
+require 'rake/testtask'
+
+task default: :test
+
+desc "Run minitest specs"
+Rake::TestTask.new :test do |t|
+  t.pattern = 'test/*spec.rb'
+end
+
 # gem authoring stuff
 begin
   require 'buildar'
