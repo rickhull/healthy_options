@@ -60,7 +60,12 @@ class HealthyOptions
       raise("symbol expected for #{flag}") unless flag.is_a?(Symbol)
       my_cfg = {}
       cfg.each { |sym, val|
-        raise("symbol expected for #{sym}") unless sym.is_a?(Symbol)
+        case sym
+        when :long, :short, :value, :description
+          # ok
+        else
+          raise("unknown spec field: #{sym}")
+        end
         my_cfg[sym] = val
       }
       @option_specs[flag] = my_cfg
