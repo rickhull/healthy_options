@@ -4,8 +4,9 @@
 
 ## Background
 
-Thinking about parsing command line options...  What are the most prevalent
-styles out there?
+Thinking about parsing command line options...  What are the most
+prevalent styles out there?  Could we possibly support 80-90% of the
+most prevalent styles with a single option spec and parser?
 
 ### Terminology
 
