@@ -3,10 +3,6 @@ require 'healthy_options'
 
 describe HealthyOptions do
   before do
-
-    # NOTE: these are just for show.  the flag definitions currently live
-    #       inside the lib at HealthyOptions::FLAGS
-    #       I am about to factor this out...
     @flags = {
       foo: {
         long: 'foo',
@@ -19,6 +15,7 @@ describe HealthyOptions do
         value: false,
       },
     }
+    @options = HealthyOptions.new(@flags)
   end
 
   describe "parse_args" do
@@ -40,7 +37,7 @@ describe HealthyOptions do
 
         valid.each do |valid_args|
           it "must parse #{valid_args}" do
-            args, opts = HealthyOptions.parse(valid_args)
+            args, opts = @options.parse(valid_args)
             args.must_be_instance_of(Array)
             args.must_be_empty
             opts.must_be_instance_of(Hash)
@@ -52,7 +49,7 @@ describe HealthyOptions do
         invalid.each do |invalid_args|
           it "must reject #{invalid_args}" do
             proc {
-              HealthyOptions.parse(invalid_args)
+              @options.parse(invalid_args)
             }.must_raise RuntimeError
           end
         end
@@ -86,7 +83,7 @@ describe HealthyOptions do
 
         valid.each do |valid_args|
           it "must parse #{valid_args}" do
-            args, opts = HealthyOptions.parse(valid_args)
+            args, opts = @options.parse(valid_args)
             args.must_be_instance_of(Array)
             args.must_be_empty
             opts.must_be_instance_of(Hash)
@@ -98,14 +95,14 @@ describe HealthyOptions do
         invalid.each do |invalid_args|
           it "must reject #{invalid_args}" do
             proc {
-              HealthyOptions.parse(invalid_args)
+              @options.parse(invalid_args)
             }.must_raise RuntimeError
           end
         end
 
         special.each do |special_args|
           it "must pass on #{special_args}" do
-            args, opts = HealthyOptions.parse(special_args)
+            args, opts = @options.parse(special_args)
             args.must_be_instance_of(Array)
             args.must_equal(special_args)
             opts.must_be_instance_of(Hash)
