@@ -132,7 +132,6 @@ if it's a short option, we have to consider smashing
 
 Overall strategy, from the top:
 
-```
 1. given a string of alphanum, punctuation, and whitespace
 2. split on whitespace into args consisting of alphanum and
    punctuation (i.e. ARGV)
@@ -142,4 +141,6 @@ Overall strategy, from the top:
    short-option smashing or flag=value forms
 5. an option which takes a value can span 2 args when not using the
    flag=value form
-```
+
+
+... to be continued ...
