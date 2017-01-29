@@ -179,18 +179,52 @@ describe HealthyOptions do
 
       describe "flag options" do
         # VALID
-        # -p
+        # -b
+        # SMASHED FLAG (o=flag, p=flag, q=value)
+        # -ab
+        # -bf 5
+        # -af5
+        # -abf=5
+        # -abf 5
         # INVALID
-        # -poo
-      end
+        # -bar      # so long as 'r' is not a non-value flag
+        arguments = {
+          normal:
+            [['-b']],
+          smashed_flag:
+            [['-ab'],
+             ['-bf', '5'],
+             ['-bf5'],
+             ['-abf=5'],
+             ['-abf', '5']],
+          invalid:
+            [['-bar']],
+        }
 
-      describe "smashed flag options" do
-        # VALID (o=flag, p=flag, q=value)
-        # -op
-        # -pq 5
-        # -oq5
-        # -opq=5
-        # -opq 5
+        [:normal, :smashed_flag].each do |arg_type|
+          arguments.fetch(arg_type).each do |valid_args|
+            it "must parse #{arg_type} args: #{valid_args}" do
+              args, opts = @options.parse(valid_args)
+              args.must_be_instance_of(Array)
+              args.must_be_empty
+              opts.must_be_instance_of(Hash)
+              opts.wont_be_empty
+              opts[:bar].must_equal(true)
+            end
+          end
+        end
+
+
+
+        [:invalid].each do |arg_type|
+          arguments.fetch(arg_type).each do |invalid_args|
+            it "must reject #{invalid_args}" do
+              proc {
+                @options.parse(invalid_args)
+              }.must_raise RuntimeError
+            end
+          end
+        end
       end
     end
 
