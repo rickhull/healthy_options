@@ -25,9 +25,9 @@ class HealthyOptions
     separator: '--',
   }
 
-  def self.index(flags)
+  def self.index(option_specs)
     idx = { long: {}, short: {}, }
-    flags.each { |flag, cfg|
+    option_specs.each { |flag, cfg|
       [:long, :short].each { |fld|
         idx[fld][cfg[fld]] = flag if cfg[fld]
       }
@@ -40,12 +40,12 @@ class HealthyOptions
     arg[0] == '-'
   end
 
-  def initialize(flags = {})
-    self.flags = flags
+  def initialize(option_specs = {})
+    self.option_specs = option_specs
   end
 
-  def flags=(hsh)
-    @flags = {}
+  def option_specs=(hsh)
+    @option_specs = {}
     hsh.each { |flag, cfg|
       raise("symbol expected for #{flag}") unless flag.is_a?(Symbol)
       my_cfg = {}
@@ -53,14 +53,14 @@ class HealthyOptions
         raise("symbol expected for #{sym}") unless sym.is_a?(Symbol)
         my_cfg[sym] = val
       }
-      @flags[flag] = my_cfg
+      @option_specs[flag] = my_cfg
     }
     self.reindex
-    @flags
+    @option_specs
   end
 
   def reindex
-    @index = self.class.index(@flags)
+    @index = self.class.index(@option_specs)
   end
 
   def check_flag(arg)
@@ -82,7 +82,7 @@ class HealthyOptions
     # look up the flag in the index
     sym = @index.dig(flag_type, flag)
     return [:unknown_flag, flag] unless sym
-    spec = @flags.fetch(sym)
+    spec = @option_specs.fetch(sym)
 
     #
     # perform validation based on long/short and value/no-value
@@ -203,7 +203,7 @@ class HealthyOptions
       sym = @index[:short][char]
       raise "unknown flag smashed in: #{char} in #{arg}" unless sym
 
-      spec = @flags.fetch(sym)
+      spec = @option_specs.fetch(sym)
       if spec[:value]
         val.slice!(0, 1) if val[0] == '='
         if val.empty?
