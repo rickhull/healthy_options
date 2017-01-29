@@ -134,13 +134,12 @@ Overall strategy, from the top:
 
 1. given a string of alphanum, punctuation, and whitespace
 2. split on whitespace into args consisting of alphanum and
-   punctuation (i.e. ARGV)
-3. an arg is either an option-flag, an option-value,
-   a combination of these 2, or a non-option
-4. the combinations (options which take a value) consist of
-   short-option smashing or flag=value forms
+   punctuation (i.e. `ARGV`)
+3. an `arg` is either an `option-flag`, an `option-value`,
+   a combination of these 2, or a `non-option`
+4. the combinations (options which take a value in a single arg)
+   consist of short-option smashing or `flag=value` forms
 5. an option which takes a value can span 2 args when not using the
-   flag=value form
-
+   `flag=value` form
 
 ... to be continued ...
