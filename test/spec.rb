@@ -126,16 +126,35 @@ describe HealthyOptions do
 
     describe "short options" do
       describe "value options" do
-        # VALID (for p flag)
-        #   -p 5
-        #   -p=5
+        # VALID
+        #   -f 5
+        #   -f=5
         # SMASHED VALUE (valid)
-        #   -p5
+        #   -f5
         # SMASHED FLAG (valid)
-        #   -op 5
-        #   -op=5
+        #   -af 5
+        #   -af=5
         # SMASHED FLAG & VALUE
-        #   -op5
+        #   -af5
+        valid = [['-f', '5'],
+                 ['-f=5'],
+                ]
+        smashed_value = [['-f5']]
+        smashed_flag = [['-af', '5'],
+                        ['-af=5'],
+                       ]
+        smashed_flag_value = [['-af5']]
+
+        valid.each do |valid_args|
+          it "must parse #{valid_args}" do
+            args, opts = @options.parse(valid_args)
+            args.must_be_instance_of(Array)
+            args.must_be_empty
+            opts.must_be_instance_of(Hash)
+            opts.wont_be_empty
+            opts[:foo].must_equal("5")
+          end
+        end
       end
 
       describe "smashed value options" do
