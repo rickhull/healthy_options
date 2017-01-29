@@ -47,7 +47,7 @@ First, some terminology, as used below:
 
 `-lf -lr`
 
-1. is this `flag=l`, `value=f` or `flag=lf`?
+1. is this `flag=l value=f` or `flag=lf`?
 2. check `flag=lf` first, noting whether we have a value for it
 3. we don't have a value for `flag=lf`: no equals, and the next arg is a flag
 
