@@ -85,8 +85,8 @@ to match the spec.
 
 # Recommendation
 
-1. don't support `-nr` (instead: one dash for short -- single char
-   -- options, two dashes for long options)
+1. don't support `-nr` (instead: one dash for short, single char
+   options, two dashes for long options)
 2. don't support smashing for long options, ever
 3. support smashing for short options, both flags and any final value
 4. always handle an `=` immediately after a recognized flag
@@ -119,11 +119,13 @@ if it's a short option, we have to consider smashing
 2. confirm the flag and whether it takes a value
 3. if the next character is a space, look for value match
  2.a if no value wanted, done
- 2.b if value wanted, fail if no args or next arg is a flag. otherwise done
+ 2.b if value wanted, fail if no args or next arg is a flag.
+     otherwise done
 3. if the next character is equals, look for a value match
  3.a if no value wanted, fail
  3.b if value wanted, take the right side of the equals, done
-4. if the next character is an alphanum, then we have either a smashed flag or a smashed value, depending on #2.
+4. if the next character is an alphanum, then we have either a
+   smashed flag or a smashed value, depending on #2.
  3.a if no value wanted, then parse next char as a short flag
  3.b if value wanted, read the rest of the word as a value, done
 ```
@@ -132,7 +134,8 @@ Overall strategy, from the top:
 
 ```
 1. given a string of alphanum, punctuation, and whitespace
-2. split on whitespace into args consisting of alphanum and punctuation
+2. split on whitespace into args consisting of alphanum and
+   punctuation
 3. an arg is either an option-flag, an option-value,
    a combination of these 2, or a non-option
 4. the combinations consist of short-option smashing or flag=value
