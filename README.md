@@ -37,11 +37,11 @@ First, some terminology, as used below:
 
 ### Values
 
-* space, e.g. --long-flag value
-* equals, e.g. --long-flag=value
-* smash, e.g. -lvalue
+* space, e.g. `--long-flag value`
+* equals, e.g. `--long-flag=value`
+* smash, e.g. `-lvalue`
 
-### Smash flags
+### Smash Flags
 
 * e.g. `ps aux` or `ps -ef`
 
